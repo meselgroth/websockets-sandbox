@@ -27,15 +27,18 @@ namespace server
                 Console.WriteLine($"IsWebSocketRequest: {context.WebSockets.IsWebSocketRequest}");
 
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
+                var msgHandler = new MessageHandler(webSocket);
                 var buffer = new byte[1024 * 4];
                 WebSocketReceiveResult receivedMsg;
                 do
                 {
                     var arraySegment = new ArraySegment<byte>(buffer);
                     receivedMsg = await webSocket.ReceiveAsync(arraySegment, CancellationToken.None);
-                    Console.WriteLine($"Received message: {Encoding.UTF8.GetString(buffer, 0, receivedMsg.Count)}");
-                    
+                    var msgText = Encoding.UTF8.GetString(buffer, 0, receivedMsg.Count);
+                    Console.WriteLine($"Received message: {msgText}");
+
+                    await msgHandler.Handle(msgText);
+
                 } while (receivedMsg.CloseStatus == null);
 
                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
