@@ -22,14 +22,14 @@ namespace server
         {
             app.UseWebSockets();
 
-            var stateManager = new CrossSocketState();
+            var stateManager = new SocketManager();
 
             app.Use(async (context, next) =>
             {
                 Console.WriteLine($"IsWebSocketRequest: {context.WebSockets.IsWebSocketRequest}");
 
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
+                stateManager.AddSocket(webSocket);
                 var buffer = new byte[1024 * 4];
                 WebSocketReceiveResult receivedMsg;
                 do
@@ -40,7 +40,6 @@ namespace server
                     Console.WriteLine($"Received message: {msgText}");
 
                     var state = stateManager.ProcessCommand(msgText);
-                    await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(state)), WebSocketMessageType.Text, true, CancellationToken.None);
 
                 } while (receivedMsg.CloseStatus == null);
 
