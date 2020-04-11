@@ -1,5 +1,6 @@
 using System;
 using System.Net.WebSockets;
+using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +27,16 @@ namespace server
                 Console.WriteLine($"IsWebSocketRequest: {context.WebSockets.IsWebSocketRequest}");
 
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+
+                var buffer = new byte[1024 * 4];
+                WebSocketReceiveResult receivedMsg;
+                do
+                {
+                    var arraySegment = new ArraySegment<byte>(buffer);
+                    receivedMsg = await webSocket.ReceiveAsync(arraySegment, CancellationToken.None);
+                    Console.WriteLine($"Received message: {new ASCIIEncoding().GetString(buffer, 0, receivedMsg.Count)}");
+                    
+                } while (receivedMsg.CloseStatus == null);
 
                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
             });
