@@ -21,14 +21,13 @@ namespace server
         {
             app.UseWebSockets();
 
-            app.Use((context, next) =>
+            app.Use(async (context, next) =>
             {
                 Console.WriteLine($"IsWebSocketRequest: {context.WebSockets.IsWebSocketRequest}");
 
-                // Warning blocking the middleware thread 
-                WebSocket webSocket = context.WebSockets.AcceptWebSocketAsync().Result;
+                WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
-                return webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
             });
         }
     }
