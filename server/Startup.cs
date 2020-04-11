@@ -30,6 +30,7 @@ namespace server
 
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                 stateManager.AddSocket(webSocket);
+                
                 var buffer = new byte[1024 * 4];
                 WebSocketReceiveResult receivedMsg;
                 do
