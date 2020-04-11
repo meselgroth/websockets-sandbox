@@ -34,8 +34,7 @@ namespace server
                 WebSocketReceiveResult receivedMsg;
                 do
                 {
-                    var arraySegment = new ArraySegment<byte>(buffer);
-                    receivedMsg = await webSocket.ReceiveAsync(arraySegment, CancellationToken.None);
+                    receivedMsg = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                     var msgText = Encoding.UTF8.GetString(buffer, 0, receivedMsg.Count);
                     Console.WriteLine($"Received message: {msgText}");
 

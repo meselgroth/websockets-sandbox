@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -9,7 +9,7 @@ namespace server
 {
     public class SocketManager
     {
-        private readonly List<WebSocket> _webSockets = new List<WebSocket>();
+        private readonly ConcurrentBag<WebSocket> _webSockets = new ConcurrentBag<WebSocket>();
         private string state = string.Empty;
 
         public SocketManager()
