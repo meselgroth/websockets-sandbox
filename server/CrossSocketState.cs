@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace server
 {
-    internal class MessageHandler
+    internal class CrossSocketState
     {
-        private readonly WebSocket _webSocket;
         private string state = string.Empty;
 
-        public MessageHandler(WebSocket webSocket)
+        public CrossSocketState()
         {
-            _webSocket = webSocket;
         }
 
-        public async Task Handle(string msgText)
+        public string ProcessCommand(string msgText)
         {
             switch (msgText)
             {
@@ -27,7 +25,7 @@ namespace server
                     state = "stopped";
                     break;
             }
-            await _webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(state)), WebSocketMessageType.Text, true, CancellationToken.None);
+            return state;
         }
     }
 }
