@@ -1,9 +1,20 @@
 {
-   // Use IntelliSense to find out which attributes exist for C# debugging
-   // Use hover for the description of the existing attributes
-   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-   "version": "0.2.0",
-   "configurations": [
+    // Use IntelliSense to find out which attributes exist for C# debugging
+    // Use hover for the description of the existing attributes
+    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/csharpclient/bin/Debug/netcoreapp3.1/csharpclient.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/csharpclient",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
+        },
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
@@ -31,6 +42,13 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Server/Client",
+            "configurations": [".NET Core Launch (web)", ".NET Core Launch (console)"],
+            "preLaunchTask": "${defaultBuildTask}"
         }
     ]
 }
