@@ -15,7 +15,7 @@ namespace csharpclient
             webSocket = new ClientWebSocket();
             await webSocket.ConnectAsync(new Uri("ws://localhost:5000/"), CancellationToken.None);
 
-            var receiverTask = Task.Run(async () => await Receiver());
+            var receiverTask = Receiver();
             var input = string.Empty;
             do
             {
@@ -25,8 +25,7 @@ namespace csharpclient
                 await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(input)), WebSocketMessageType.Text, true, CancellationToken.None);
             } while (input != "x");
 
-            // Note currently doesn't cancel Receiver and throws error
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
+            await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
         }
 
         private static async Task Receiver()
