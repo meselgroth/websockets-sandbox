@@ -26,6 +26,7 @@ namespace csharpclient
             } while (input != "x");
 
             await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "ok", CancellationToken.None);
+            await receiverTask; // Receive last messages and close gracefully
         }
 
         private static async Task Receiver()
@@ -37,7 +38,7 @@ namespace csharpclient
             {
                 receivedMsg = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 var msgText = Encoding.UTF8.GetString(buffer, 0, receivedMsg.Count);
-                Console.WriteLine($"Received message: {msgText}");
+                Console.WriteLine($"Received message: {msgText}, close status: {receivedMsg.CloseStatus}");
 
             } while (receivedMsg.CloseStatus == null);
         }
