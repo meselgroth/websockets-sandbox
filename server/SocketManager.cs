@@ -12,10 +12,6 @@ namespace server
         private readonly ConcurrentBag<WebSocket> _webSockets = new ConcurrentBag<WebSocket>();
         private string state = string.Empty;
 
-        public SocketManager()
-        {
-        }
-
         public async Task<string> ProcessCommand(string msgText)
         {
             switch (msgText)
